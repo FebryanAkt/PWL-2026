@@ -14,5 +14,4 @@
             <td>{{ $data->level_id }}</td>
         </tr>
     </table>
-    Jumlah user dengan level_id = 2 : {{ $jumlah_user }}
 </body>
