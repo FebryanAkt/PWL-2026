@@ -28,23 +28,40 @@ class PostForm
                     ->icon(Heroicon::OutlinedDocumentText)
                     ->schema([
 
+                        // field utama 2 kolom
                         Group::make([
                             TextInput::make("title")
                                 ->required()
-                                ->minLength(5),
+                                ->minLength(5)
+                                ->validationMessages([
+                                    "required" => "Title wajib diisi",
+                                    "min" => "Title minimal 5 karakter",
+                                ]),
 
                             TextInput::make("slug")
                                 ->required()
-                                ->unique(ignoreRecord: true),
+                                ->minLength(3)
+                                ->unique(ignoreRecord: true)
+                                ->validationMessages([
+                                    "required" => "Slug wajib diisi",
+                                    "min" => "Slug minimal 3 karakter",
+                                    "unique" => "Slug harus unik",
+                                ]),
 
                             Select::make("category_id")
                                 ->relationship("category", "name")
                                 ->preload()
-                                ->searchable(),
+                                ->searchable()
+                                ->required()
+                                ->validationMessages([
+                                    "required" => "Category wajib dipilih",
+                                ]),
 
                             ColorPicker::make("color"),
-                        ])->columns(2),
+                        ])
+                        ->columns(2),
 
+                        // full width
                         MarkdownEditor::make("content")
                             ->columnSpanFull(),
 
@@ -59,7 +76,11 @@ class PostForm
                         ->schema([
                             FileUpload::make("image")
                                 ->disk("public")
-                                ->directory("posts"),
+                                ->directory("posts")
+                                ->required()
+                                ->validationMessages([
+                                    "required" => "Image wajib diupload",
+                                ]),
                         ]),
 
                     Section::make("Meta Information")
