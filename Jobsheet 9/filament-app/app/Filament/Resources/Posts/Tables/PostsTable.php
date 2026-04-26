@@ -20,9 +20,22 @@ class PostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title') ->sortable() ->searchable(),
-                TextColumn::make('slug') ->sortable() ->searchable(),
-                TextColumn::make('category.name') ->sortable() ->searchable(),
+                TextColumn::make('id') 
+                    ->label('ID') 
+                    ->toggleable(isToggledHiddenByDefault: true) 
+                    ->sortable(),  
+                TextColumn::make('title') 
+                    ->sortable() 
+                    ->toggleable()
+                    ->searchable(),
+                TextColumn::make('slug') 
+                    ->sortable() 
+                    ->toggleable()
+                    ->searchable(),
+                TextColumn::make('category.name') 
+                    ->sortable() 
+                    ->toggleable()
+                    ->searchable(),
                 ColorColumn::make('color'),
                 ImageColumn::make('image')
                     ->disk('public'),
@@ -33,13 +46,16 @@ class PostsTable
                     ->label('Created At')
                     ->dateTime()
                     ->sortable(),
-            ])->defaultSort('created_at', 'desc')
+                TextColumn::make('tags')
+                    ->label('Tags')
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])->defaultSort('created_at', 'asc')
             ->filters([
                 SelectFilter::make('category_id')
                 ->relationship('category', 'name')
                 ->label('Category')
                 ->preload(),
-                
+
                 Filter::make('created_at')
                     ->label('Creation Date')
                     ->schema([
