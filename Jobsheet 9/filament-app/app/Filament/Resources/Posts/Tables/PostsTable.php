@@ -10,6 +10,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 
 class PostsTable
 {
@@ -17,9 +20,9 @@ class PostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title') ->sortable(),
-                TextColumn::make('slug') ->sortable(),
-                TextColumn::make('category.name') ->sortable(),
+                TextColumn::make('title') ->sortable() ->searchable(),
+                TextColumn::make('slug') ->sortable() ->searchable(),
+                TextColumn::make('category.name') ->sortable() ->searchable(),
                 ColorColumn::make('color'),
                 ImageColumn::make('image')
                     ->disk('public'),
@@ -32,8 +35,26 @@ class PostsTable
                     ->sortable(),
             ])->defaultSort('created_at', 'desc')
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                ->relationship('category', 'name')
+                ->label('Category')
+                ->preload(),
+                
+                Filter::make('created_at')
+                    ->label('Creation Date')
+                    ->schema([
+                        DatePicker::make('created_at')
+                            ->label('Select Date :'),
+                    ])
+                    ->query(function ($query, $data) {
+                        return $query
+                        ->when(
+                            $data['created_at'],
+                            fn ($query, $date) => $query->whereDate('created_at', $date)
+                            );
+                    })
             ])
+            
             ->recordActions([
                 EditAction::make(),
             ])
