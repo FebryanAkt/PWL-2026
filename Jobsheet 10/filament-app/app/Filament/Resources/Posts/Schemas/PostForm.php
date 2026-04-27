@@ -14,6 +14,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Support\Icons\Heroicon;
+use App\Models\Category;
 
 class PostForm
 {
@@ -50,9 +51,10 @@ class PostForm
 
                             Select::make("category_id")
                                 ->relationship("category", "name")
-                                ->preload()
-                                ->searchable()
+                                ->options(Category::all()->pluck("name", "id"))
                                 ->required()
+                                // ->preload()
+                                ->searchable()
                                 ->validationMessages([
                                     "required" => "Category wajib dipilih",
                                 ]),
