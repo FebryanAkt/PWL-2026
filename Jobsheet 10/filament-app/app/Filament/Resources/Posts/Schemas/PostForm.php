@@ -64,7 +64,7 @@ class PostForm
                         ->columns(2),
 
                         // full width
-                        MarkdownEditor::make("content")
+                        MarkdownEditor::make("body")
                             ->columnSpanFull(),
 
                     ])
@@ -88,7 +88,9 @@ class PostForm
                     Section::make("Meta Information")
                         ->icon(Heroicon::OutlinedAdjustmentsHorizontal)
                         ->schema([
-                            TagsInput::make("tags"),
+                            Select::make("tags")
+                            ->relationship("tags", "name"),
+                            TagsInput::make("tags"  ),
                             Checkbox::make("published"),
                             DateTimePicker::make("published_at"),
                         ]),
